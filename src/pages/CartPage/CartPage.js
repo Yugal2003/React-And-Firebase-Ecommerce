@@ -51,8 +51,8 @@ const CartPage = () => {
             </div>
 
             {/* left & right side */}
-            <div className='w-full mx-auto flex flex-col lg:flex-row border border-black px-8'>
-                <div className='flex flex-col gap-8 border border-black p-4 w-[50%]'>
+            <div className='w-full mx-auto flex flex-col lg:flex-row px-8'>
+                <div className='flex flex-col gap-8 p-4 w-[50%]'>
                     {
                         products.map((pro,index) =>(
                             <div className='flex flex-col gap-2'>
@@ -94,31 +94,31 @@ const CartPage = () => {
                 </div>
 
                 {/* right */}
-                <div className='border w-[50%]'>
-                    <div>
-                        <h1>Price Details</h1>
+                <div className='flex flex-col items-center justify-start w-[50%] gap-3'>
+                    <div className='flex justify-start w-[50%]'>
+                        <h1 className='text-xl'>Price Details</h1>
                     </div>
                     <hr/>
-                    <div>
+                    <div className='flex justify-between w-[50%]'>
                         <h1>Price (3 items)</h1>
                         <h1>₹52,398</h1>
                     </div>
-                    <div>
+                    <div className='flex justify-between w-[50%]'>
                         <h1>Discount</h1>
                         <h1>-₹3,431</h1>
                     </div>
-                    <div>
+                    <div className='flex justify-between w-[50%]'>
                         <h1>Delivery Charges</h1>
                         <h1>Free</h1>
                     </div>
                     <hr/>
-                    <div>
+                    <div className='flex justify-between w-[50%]'>
                         <h1>Total Amount</h1>
                         <h1>-₹48,967</h1>
                     </div>
                     <hr/>
-                    <div>
-                        <button className='rounded-md'>Buy Now</button>
+                    <div className='flex justify-start w-[50%]'>
+                        <button className='rounded-md w-full p-1.5 cursor-pointer hover:bg-pink-700 duration-300 bg-pink-600 text-white'>Buy Now</button>
                     </div>
                 </div>
 

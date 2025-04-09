@@ -15,10 +15,11 @@ const Navbar = () => {
             {/* second */}
             <div className='flex items-center justify-center space-x-4'>
                 <ul className='flex gap-4 md:gap-6 text-white font-bold text-sm md:text-base'>
-                    <Link to='/'><li>Home</li></Link>
-                    <li>All Products</li>
-                    <li>SignUp</li>
-                    <li>User</li>
+                    <Link to={'/'}><li>Home</li></Link>
+                    <Link to={'/allproduct'}><li>All Products</li></Link>
+                    <Link to={'/signup'}><li>SignUp</li></Link>
+                    <Link to={'/user-dashboard'}><li>User</li></Link> 
+                    <Link to={'/admin-dashboard'}><li>Admin</li></Link>
                     <li>Cart(0)</li>
                 </ul>
             </div>
