@@ -1,68 +1,160 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import myContext from "../../context/myContext";
+import Loader from "../../components/loader/Loader";
+import toast from "react-hot-toast";
+import { auth, fireDB } from "../../firebase/FirebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 
 const Signup = () => {
-//   const [formData, setFormData] = useState({
-//     fullName: '',
-//     email: '',
-//     password: '',
-//   });
+  const context = useContext(myContext);
+  const { loading, setLoading } = context;
 
-//   const handleChange = (e) => {
-//     setFormData({ 
-//       ...formData, 
-//       [e.target.name]: e.target.value 
-//     });
-//   };
+  // navigate
+  const navigate = useNavigate();
 
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     console.log('User Signed Up:', formData);
-//     // You can handle form submission here (e.g., API call)
-//   };
+  // User Signup State
+  const [userSignup, setUserSignup] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "user",
+  });
+
+  const userSignupFunction = async () => {
+    // validation
+    if (
+      userSignup.name === "" ||
+      userSignup.email === "" ||
+      userSignup.password === ""
+    ) {
+      toast.error("All Fields are required",{position:"top-right"});
+      return;
+    }
+
+    if (userSignup.password.length < 6) {
+      toast.error("Password must be at least 6 characters",{position:"top-right"});
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const users = await createUserWithEmailAndPassword(
+        auth,
+        userSignup.email,
+        userSignup.password
+      );
+
+      // create user object
+      const user = {
+        name: userSignup.name,
+        email: users.user.email,
+        uid: users.user.uid,
+        role: userSignup.role,
+        time: Timestamp.now(),
+        date: new Date().toLocaleString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        }),
+      };
+
+      // create user Refrence
+      const userRefrence = collection(fireDB, "user");
+
+      // Add User Detail
+      await addDoc(userRefrence, user);
+
+      setUserSignup({
+        name: "",
+        email: "",
+        password: "",
+      });
+
+      toast.success("Signup Successfully");
+
+      setLoading(false);
+      navigate("/login");
+    } 
+    catch (error) {
+      console.log(error);
+      toast.error(error.message); 
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#f9f9f9]">
-      <div className="bg-pink-100 rounded-lg p-8 shadow-md w-[350px]">
-        <h2 className="text-2xl font-bold text-center text-pink-700 mb-6">Signup</h2>
-        <form>
+    <div className="flex justify-center items-center h-screen">
+      {loading && <Loader />}
+      {/* Login Form  */}
+      <div className="login_Form bg-pink-50 px-8 py-6 border border-pink-100 rounded-xl shadow-md">
+        {/* Top Heading  */}
+        <div className="mb-5">
+          <h2 className="text-center text-2xl font-bold text-pink-500 ">Signup</h2>
+        </div>
+        {/* Input One  */}
+        <div className="mb-3">
           <input
             type="text"
-            name="fullName"
             placeholder="Full Name"
-            // value={formData.fullName}
-            // onChange={handleChange}
-            className="w-full mb-4 p-3 rounded-md border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-400"
-            required
+            value={userSignup.name}
+            onChange={(e) => {
+              setUserSignup({
+                ...userSignup,
+                name: e.target.value,
+              });
+            }}
+            className="w-72 mb-4 p-3 rounded-md border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-400"
           />
+        </div>
+        {/* Input Two  */}
+        <div className="mb-3">
           <input
             type="email"
-            name="email"
             placeholder="Email Address"
-            // value={formData.email}
-            // onChange={handleChange}
-            className="w-full mb-4 p-3 rounded-md border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-400"
-            required
+            value={userSignup.email}
+            onChange={(e) => {
+              setUserSignup({
+                ...userSignup,
+                email: e.target.value,
+              });
+            }}
+            className="w-72 mb-4 p-3 rounded-md border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-400"
           />
+        </div>
+        {/* Input Three  */}
+        <div className="mb-5">
           <input
             type="password"
-            name="password"
             placeholder="Password"
-            // value={formData.password}
-            // onChange={handleChange}
-            className="w-full mb-6 p-3 rounded-md border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-400"
-            required
+            value={userSignup.password}
+            onChange={(e) => {
+              setUserSignup({
+                ...userSignup,
+                password: e.target.value,
+              });
+            }}
+            className="w-72 mb-4 p-3 rounded-md border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-400"
+            // className="bg-pink-50 border border-pink-200 px-2 py-2 w-96 rounded-md outline-none placeholder-pink-400"
           />
+        </div>
+        {/* Signup Button  */}
+        <div className="mb-5">
           <button
             type="submit"
-            className="w-full bg-pink-600 text-white font-semibold py-2 rounded-md hover:bg-pink-700 transition duration-300"
-          >
-            Signup
-          </button>
-        </form>
-        <p className="text-sm text-center mt-4 text-black">
-          Have an account? <span className="text-pink-600 font-semibold cursor-pointer hover:underline"><Link to={'/login'}>Login</Link></span>
-        </p>
+            onClick={userSignupFunction}
+            className="bg-pink-500 hover:bg-pink-600 w-full text-white text-center py-2 font-bold rounded-md "
+          >Signup</button>
+        </div>
+        <div>
+          <h2 className="text-black">
+            Have an account?{" "}
+            <Link className=" text-pink-500 font-bold" to={"/login"}>
+              Login
+            </Link>
+          </h2>
+        </div>
       </div>
     </div>
   );

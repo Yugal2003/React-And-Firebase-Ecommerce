@@ -6,6 +6,7 @@ import HomePageProductCard from '../../components/HomePageSections/HomePageProdu
 import Testimonial from '../../components/HomePageSections/Testimonial/Testimonial'
 
 const Homepage = () => {
+
   return (
     <Layout>
         <HeroSection/>
