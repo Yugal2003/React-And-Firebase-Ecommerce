@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Category = () => {
 
@@ -43,10 +44,12 @@ const Category = () => {
             {
                 category.map((ele,id) =>{
                     return(
-                        <div key={id} className='flex flex-col items-center cursor-pointer hover:scale-105 duration-500'>
-                            <img src={ele.image} alt='img' className='w-24 lg:w-32'/>
-                            <p className='font-bold text-lg'>{ele.name}</p>
-                        </div>
+                        <Link to={`/category/${ele.name}`}>
+                            <div key={id} className='flex flex-col items-center cursor-pointer hover:scale-105 duration-500'>
+                                <img src={ele.image} alt='img' className='w-24 lg:w-32'/>
+                                <p className='font-bold text-lg'>{ele.name}</p>
+                            </div>
+                        </Link>
                     )
                 })
             }

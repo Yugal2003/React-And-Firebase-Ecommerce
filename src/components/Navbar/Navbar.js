@@ -2,6 +2,8 @@ import React from 'react'
 import SearchBar from '../SearchBar/SearchBar'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { FaShoppingCart } from "react-icons/fa";
 
 const Navbar = () => {
 
@@ -9,6 +11,7 @@ const Navbar = () => {
     console.log(user);
 
     const navigate = useNavigate();
+    const cartItems = useSelector((state) => state.cart);
 
     const logout = () =>{
         if(window.confirm("Are You Sure To Logout !!!")){
@@ -53,8 +56,8 @@ const Navbar = () => {
                         user && <li className="cursor-pointer" onClick={logout}>Logout</li>
                     }
                      <li>
-                        <Link to={'/cart'}>
-                            Cart(0)
+                        <Link className='flex items-center gap-1' to={'/cart'}>
+                            <FaShoppingCart size={20}/> ({cartItems.length})
                         </Link>
                     </li>
                 </ul>

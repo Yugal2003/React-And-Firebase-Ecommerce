@@ -1,82 +1,33 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import myContext from '../../../context/myContext'
+import Loader from '../../loader/Loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, deleteFromCart } from '../../../redux/cartSlice';
+import toast from 'react-hot-toast';
 
 const HomePageProductCard = () => {
 
-    const productData = [
-        {
-            id: 1,
-            image: 'https://i.pinimg.com/564x/3e/05/ce/3e05cefbc7eec79ac175ea8490a67939.jpg',
-            title: 'Hand Painted Blue Kaushalam Tea Pot in Aluminium',
-            desc: 'Shop Hand Painted Blue Kaushalam Tea Pot in Aluminium, handmade by Mrinalika Jain. Fair pricing. Ethically made. Positive impact.',
-            price: 150,
-            trendingProductName: 'Featured',
-            quantity: 1,
-        },
-        {
-            id: 2,
-            image: 'https://i.pinimg.com/736x/e4/61/f2/e461f2246b6ad93e2099d98780626396.jpg',
-            title: 'Kaushalam kalash Copper Pot',
-            desc: 'Shop Hand Painted Blue Kaushalam Tea Pot in Aluminium, handmade by Mrinalika Jain. Fair pricing. Ethically made. Positive impact.',
-            price: 120,
-            trendingProductName: 'Featured',
-            quantity: 1,
-        },
-        {
-            id: 3,
-            image: 'https://i.pinimg.com/564x/fd/50/68/fd50688767adb47aba7204f034554cbd.jpg',
-            title: 'Hand Painted Blue Kaushalam Tea Pot in Aluminium',
-            desc: 'Shop Hand Painted Blue Kaushalam Tea Pot in Aluminium, handmade by Mrinalika Jain. Fair pricing. Ethically made. Positive impact.',
-            price: 130,
-            trendingProductName: 'Featured',
-            quantity: 1,
-        },
-        {
-            id: 4,
-            image: 'https://i.pinimg.com/564x/22/80/8d/22808d88ada424962f2e064f3075b2d1.jpg',
-            title: 'Hand Painted Blue Kaushalam Tea Pot in Aluminium',
-            desc: 'Shop Hand Painted Blue Kaushalam Tea Pot in Aluminium, handmade by Mrinalika Jain. Fair pricing. Ethically made. Positive impact.',
-            price: 120,
-            trendingProductName: 'Featured',
-            quantity: 1,
-        },
-        {
-            id: 1,
-            image: 'https://i.pinimg.com/564x/3e/05/ce/3e05cefbc7eec79ac175ea8490a67939.jpg',
-            title: 'Hand Painted Blue Kaushalam Tea Pot in Aluminium',
-            desc: 'Shop Hand Painted Blue Kaushalam Tea Pot in Aluminium, handmade by Mrinalika Jain. Fair pricing. Ethically made. Positive impact.',
-            price: 150,
-            trendingProductName: 'Featured',
-            quantity: 1,
-        },
-        {
-            id: 2,
-            image: 'https://i.pinimg.com/736x/e4/61/f2/e461f2246b6ad93e2099d98780626396.jpg',
-            title: 'Kaushalam kalash Copper Pot',
-            desc: 'Shop Hand Painted Blue Kaushalam Tea Pot in Aluminium, handmade by Mrinalika Jain. Fair pricing. Ethically made. Positive impact.',
-            price: 120,
-            trendingProductName: 'Featured',
-            quantity: 1,
-        },
-        {
-            id: 3,
-            image: 'https://i.pinimg.com/564x/fd/50/68/fd50688767adb47aba7204f034554cbd.jpg',
-            title: 'Hand Painted Blue Kaushalam Tea Pot in Aluminium',
-            desc: 'Shop Hand Painted Blue Kaushalam Tea Pot in Aluminium, handmade by Mrinalika Jain. Fair pricing. Ethically made. Positive impact.',
-            price: 130,
-            trendingProductName: 'Featured',
-            quantity: 1,
-        },
-        {
-            id: 4,
-            image: 'https://i.pinimg.com/564x/22/80/8d/22808d88ada424962f2e064f3075b2d1.jpg',
-            title: 'Hand Painted Blue Kaushalam Tea Pot in Aluminium',
-            desc: 'Shop Hand Painted Blue Kaushalam Tea Pot in Aluminium, handmade by Mrinalika Jain. Fair pricing. Ethically made. Positive impact.',
-            price: 120,
-            trendingProductName: 'Featured',
-            quantity: 1,
-        }
-    ]
+    const context = useContext(myContext);
+    const {loading,getAllProduct} = context;
+    console.log(getAllProduct);
+
+    const dispatch = useDispatch();
+    const cartItems = useSelector((state) => state.cart);
+    
+    const addCart = (product) =>{
+        dispatch(addToCart(product));
+        toast.success("Add item success !!!",{position:"top-right"});
+    }
+
+    const deleteCart = (product) =>{
+        dispatch(deleteFromCart(product));
+        toast.success("Delete item success !!!",{position:"top-right"});
+    }
+
+    useEffect(()=>{
+        localStorage.setItem('cart',JSON.stringify(cartItems));
+    },[cartItems]);
 
   return (
     <div className='w-full'>
@@ -87,17 +38,29 @@ const HomePageProductCard = () => {
                 <h1>Bestselling Products</h1>
             </div>
 
+            <div className='flex justify-center mt-8'>
+                {loading && <Loader/>}
+            </div>
             {/* map data */}
             <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 p-4 lg:p-8'>
                 {
-                    productData.map((product,index)=>{
+                    getAllProduct.slice(0,8).map((product,index)=>{
                         return(
                             <div key={index} className='cursor-pointer rounded-md flex flex-col text-center'>
-                                <Link to='/productinfo'><img className='w-full hover:scale-105 duration-500 object-cover rounded-md' src={product.image} alt='product_img'/></Link>
-                                <h2 className='font-bold text-base lg:text-lg min-h-16'>{product.title}</h2>
+                                <Link to={`/productinfo/${product.id}`}><img className='rounded-md object-contain lg:h-80  h-96 w-full hover:scale-105 duration-500' src={product.productImageUrl} alt='product_img'/></Link>
+
+                                <h2 className='font-bold text-base lg:text-lg min-h-16 pt-4'>{product.title}</h2>
+
                                 <h3 className='font-bold text-base lg:text-lg'>Price : <span className='text-pink-700'>₹{product.price}</span></h3>
+
                                 {/* <h3 className='font-bold text-base lg:text-lg'>{product.desc.substring(0,30)}</h3> */}
-                                <button className='rounded-md p-2 hover:text-white text-black font-bold text-lg bg-pink-700 duration-500'>Add To Cart</button>
+                                {
+                                    cartItems.some((p) => p.id === product.id)
+                                    ?
+                                    <button onClick={()=> deleteCart(product)} className='rounded-md p-2 text-black font-bold text-lg hover:bg-pink-600 bg-pink-500 duration-500'>Delete From Cart</button>
+                                    :
+                                    <button onClick={()=> addCart(product)} className='rounded-md p-2 text-black font-bold text-lg hover:bg-pink-600 bg-pink-500 duration-500'>Add To Cart</button>
+                                }
                             </div>
                         )
                     })

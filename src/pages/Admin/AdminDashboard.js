@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import ProductDetail from '../../components/Admin/ProductDetail';
 import OrderDetail from '../../components/Admin/OrderDetail';
 import UserDetail from '../../components/Admin/UserDetail';
+import myContext from '../../context/myContext';
 
 const AdminDashboard = () => {
 
     const user = JSON.parse(localStorage.getItem("users"));
+
+    const context = useContext(myContext);
+    const {getAllProduct,getAllOrder,getAllUser} = context;
 
   return (
         <div>
@@ -63,7 +67,7 @@ const AdminDashboard = () => {
                                         <path d="m15 11-1 9" />
                                     </svg>
                                 </div>
-                                <h2 className="title-font font-medium text-3xl text-pink-400 fonts1" >10</h2>
+                                <h2 className="title-font font-medium text-3xl text-pink-400 fonts1" >{getAllProduct.length}</h2>
                                 <p className=" text-pink-500  font-bold" >Total Products</p>
                             </div>
                         </Tab>
@@ -91,7 +95,7 @@ const AdminDashboard = () => {
                                         <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
                                     </svg>
                                 </div>
-                                <h2 className="title-font font-medium text-3xl text-pink-400 fonts1" >10</h2>
+                                <h2 className="title-font font-medium text-3xl text-pink-400 fonts1" >{getAllOrder.length}</h2>
                                 <p className=" text-pink-500  font-bold" >Total Order</p>
                             </div>
                         </Tab>
@@ -117,7 +121,7 @@ const AdminDashboard = () => {
                                         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                                     </svg>
                                 </div>
-                                <h2 className="title-font font-medium text-3xl text-pink-400 fonts1" >10</h2>
+                                <h2 className="title-font font-medium text-3xl text-pink-400 fonts1" >{getAllUser.length}</h2>
                                 <p className=" text-pink-500  font-bold" >Total User</p>
                             </div>
                         </Tab>
